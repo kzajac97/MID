@@ -59,10 +59,12 @@ def _fibonacci_distribution(n_points: int, p: int = 8, q: int = 4, m: int = 100)
         
     return distribution
 
+
 distribution_name_mapping = {'uniform': np.random.rand,
                              'sine': _sine_distribution,
                              'sawtooth': _sawtooth_distribution,
                              'fibonacci': _fibonacci_distribution}
+
 
 def random_distribution(n_points: int, distribution: str, **kwargs) -> np.array:
     """
