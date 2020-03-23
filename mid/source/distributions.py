@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Tuple
 
 import numpy as np
 from numba import jit
@@ -6,6 +6,22 @@ from scipy import integrate
 
 INTEGRAL_VALUE_INDEX = 0
 INTEGRAL_ERROR_INDEX = 1
+
+
+@jit
+def triangle(x: float) -> float:
+    """
+     Returns values from triangle distribution, described by formula:
+     .. math:: 0 for x in (-inf, -1) and [1, inf)
+                x + 1 for x in [-1, 0)
+               -x + 1 for x in [0, 1)
+
+    :param x:  value at which distribution will be evaluated
+    """
+    if x < -1 or x > 1:
+        return 0
+
+    return x + 1 if x < 0 else -x + 1
 
 
 @jit
@@ -63,7 +79,7 @@ def laplace(x: float, mu: float, b: float) -> float:
 
 
 @jit
-def cdf(pdf: Callable[[float, ...], float], x: float) -> np.array:
+def cdf(pdf: Callable[[Tuple[float, ...]], float], x: float) -> np.array:
     """
     :param pdf: probability distribution function
     :param x: point at which to evaluate
