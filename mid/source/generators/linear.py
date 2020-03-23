@@ -24,7 +24,7 @@ def _sine_distribution(n_points: int, omega: float = 10 * np.pi) -> np.array:
 
 def _sawtooth_distribution(n_points: int, period: float = 10 * np.pi) -> np.array:
     """
-    Generate random numbers from sawtotoh distribution
+    Generate random numbers from sawtooth distribution
 
     :param n_points: number of generated data points
     :param period: sawtooth period
