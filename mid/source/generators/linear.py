@@ -1,20 +1,19 @@
-from typing import Callable, Dict
-
 import numpy as np
 from scipy import signal
 
 
-def _sine_distribution(n_points: int, omega: float = 10 * np.pi) -> np.array:
+def _sine_distribution(n_points: int, omega: float = 10 * np.pi, first_sample: float = None) -> np.array:
     """
     Generate random numbers from sine distribution
 
     :param n_points: number of generated data points
     :param omega: sine frequency
+    :param first_sample: starting point for drawing distribution
 
     :return: numpy array with random distribution samples
     """
     distribution = np.zeros(n_points)
-    distribution[0] = np.random.rand()
+    distribution[0] = first_sample or np.random.rand()
 
     for index in range(1, n_points):
         distribution[index] = 0.5 * (np.sin(omega * distribution[index - 1]) + 1)
@@ -22,17 +21,18 @@ def _sine_distribution(n_points: int, omega: float = 10 * np.pi) -> np.array:
     return distribution
 
 
-def _sawtooth_distribution(n_points: int, period: float = 10 * np.pi) -> np.array:
+def _sawtooth_distribution(n_points: int, period: float = 10 * np.pi, first_sample: float = None) -> np.array:
     """
     Generate random numbers from sawtooth distribution
 
     :param n_points: number of generated data points
     :param period: sawtooth period
+    :param first_sample: starting point for drawing distribution
 
     :return: numpy array with random distribution samples
     """
     distribution = np.zeros(n_points)
-    distribution[0] = np.random.rand()
+    distribution[0] = first_sample or np.random.rand()
 
     for index in range(1, n_points):
         distribution[index] = signal.sawtooth(period * distribution[index - 1])
