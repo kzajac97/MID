@@ -35,12 +35,12 @@ def _sawtooth_distribution(n_points: int, period: float = 10 * np.pi, first_samp
     distribution[0] = first_sample or np.random.rand()
 
     for index in range(1, n_points):
-        distribution[index] = signal.sawtooth(period * distribution[index - 1])
+        distribution[index] = 0.5 * (signal.sawtooth(period * distribution[index - 1]) + 1)
 
     return distribution
 
 
-def _fibonacci_distribution(n_points: int, p: int = 8, q: int = 4, m: int = 100) -> np.array:
+def _fibonacci_distribution(n_points: int, p: int = 8, q: int = 4, m: int = 100, scale: bool = True) -> np.array:
     """
     Generate random number with fibonacci distribution
 
@@ -48,16 +48,18 @@ def _fibonacci_distribution(n_points: int, p: int = 8, q: int = 4, m: int = 100)
     :param p: fibonacci param, defaults to 8, must be greater than q
     :param q: fibonacci param, defaults to 4, must be less than p
     :param m: modulo param, defaults to 100, should be in range <100, 10_000>
+    :param scale: if True generator output will be scaled to values in range <0, 1>
 
     :return: numpy array with random distribution samples
     """
     distribution = np.zeros(n_points)
     distribution[:p] = np.random.rand(p)
+    scale_factor = 1/m if scale else 1
 
     for index in range(p, n_points):
-        distribution[index] = (distribution[index - p] + distribution[index - q]) % m
+        distribution[index] = ((distribution[index - p] + distribution[index - q]) % m)
 
-    return distribution
+    return scale_factor * distribution
 
 
 distribution_name_mapping = {
