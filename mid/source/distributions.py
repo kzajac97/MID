@@ -79,11 +79,12 @@ def laplace(x: float, mu: float, b: float) -> float:
 
 
 @jit
-def cdf(pdf: Callable[[Tuple[float, ...]], float], x: float) -> np.array:
+def cdf(pdf: Callable[[Tuple[float, ...]], float], x: float, *args) -> np.array:
     """
     :param pdf: probability distribution function
     :param x: point at which to evaluate
+    :param args: additional args to pdf function
 
     :return: cumulative distribution function value at x
     """
-    return integrate.quad(pdf, -1*np.inf, x)[INTEGRAL_VALUE_INDEX]
+    return integrate.quad(pdf, -1*np.inf, x, args)[INTEGRAL_VALUE_INDEX]
