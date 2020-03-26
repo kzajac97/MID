@@ -3,3 +3,4 @@ mid/data/*
 mid/notebooks/.ipynb_checkpoints/*
 mid/logs/*
 .idea/*
+mid/images/*
