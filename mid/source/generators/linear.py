@@ -54,19 +54,19 @@ def _fibonacci_distribution(n_points: int, p: int = 8, q: int = 4, m: int = 100,
     """
     distribution = np.zeros(n_points)
     distribution[:p] = np.random.rand(p)
-    scale_factor = 1/m if scale else 1
+    scale_factor = 1 / m if scale else 1
 
     for index in range(p, n_points):
-        distribution[index] = ((distribution[index - p] + distribution[index - q]) % m)
+        distribution[index] = (distribution[index - p] + distribution[index - q]) % m
 
     return scale_factor * distribution
 
 
 distribution_name_mapping = {
-    'uniform': np.random.rand,
-    'sine': _sine_distribution,
-    'sawtooth': _sawtooth_distribution,
-    'fibonacci': _fibonacci_distribution
+    "uniform": np.random.rand,
+    "sine": _sine_distribution,
+    "sawtooth": _sawtooth_distribution,
+    "fibonacci": _fibonacci_distribution,
 }
 
 

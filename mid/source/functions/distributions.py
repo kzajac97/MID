@@ -5,6 +5,7 @@ from numba import jit
 # File contains implementations of analytically computed
 # probability density functions for some known distributions
 
+
 @jit
 def triangle(x: float) -> float:
     """
@@ -30,7 +31,7 @@ def exponential(x: float, rate: float = 1.0) -> float:
     :param x: value at which distribution will be evaluated
     :param rate: lambda parameter of distribution
     """
-    return rate * np.exp(-1*rate*x) if x > 0 else 0
+    return rate * np.exp(-1 * rate * x) if x > 0 else 0
 
 
 @jit
@@ -43,7 +44,7 @@ def cauchy(x: float, x0: float = 0.0, gamma: float = 0.5) -> float:
     :param x0: location parameter
     :param gamma: scale parameter
     """
-    ratio = ((x - x0) / gamma)**2
+    ratio = ((x - x0) / gamma) ** 2
     return 1 / (np.pi * gamma * (1 + ratio))
 
 
@@ -58,7 +59,7 @@ def laplace(x: float, mu: float = 0.0, b: float = 1.0) -> float:
     :param b: scale parameter, in range (0, inf)
     """
     exponent = -1 * np.abs(x - mu) / b
-    return 1/(2*b) * np.exp(exponent)
+    return 1 / (2 * b) * np.exp(exponent)
 
 
 @jit
@@ -71,5 +72,5 @@ def logistic(x: float, mu: float = 1.0, s: float = 1.0) -> float:
     :param mu: location parameter
     :param s: scale parameter
     """
-    exponent = -(x - mu)/s
-    return np.exp(exponent) / (s * (1 + np.exp(exponent)**2))
+    exponent = -(x - mu) / s
+    return np.exp(exponent) / (s * (1 + np.exp(exponent) ** 2))
