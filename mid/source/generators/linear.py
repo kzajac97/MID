@@ -70,7 +70,7 @@ distribution_name_mapping = {
 }
 
 
-def random_distribution(n_points: int, distribution: str, **kwargs) -> np.array:
+def random_uniform_distribution(n_points: int, distribution: str, **kwargs) -> np.array:
     """
     Generate array of random number with chosen distribution
 
