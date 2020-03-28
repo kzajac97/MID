@@ -1,9 +1,9 @@
 import numpy as np
 from numba import jit
 
-INTEGRAL_VALUE_INDEX = 0
-INTEGRAL_ERROR_INDEX = 1
 
+# File contains implementations of analytically computed
+# probability density functions for some known distributions
 
 @jit
 def triangle(x: float) -> float:
@@ -34,20 +34,6 @@ def exponential(x: float, rate: float = 1.0) -> float:
 
 
 @jit
-def logistic(x: float, mu: float, s: float) -> float:
-    """
-    Returns values from logistic distribution
-    see: https://en.wikipedia.org/wiki/Logistic_distribution
-
-    :param x: value at which distribution will be evaluated
-    :param mu: location parameter
-    :param s: scale parameter
-    """
-    exponent_value = -(x - mu)/s
-    return np.exp(exponent_value) / (s * (1 + np.exp(exponent_value)**2))
-
-
-@jit
 def cauchy(x: float, x0: float, gamma: float) -> float:
     """
     Returns values from Cauchy distribution
@@ -73,3 +59,17 @@ def laplace(x: float, mu: float, b: float) -> float:
     """
     exponent = -1 * np.abs(x - mu) / b
     return 1/(2*b) * np.exp(exponent)
+
+
+@jit
+def logistic(x: float, mu: float, s: float) -> float:
+    """
+    Returns values from logistic distribution
+    see: https://en.wikipedia.org/wiki/Logistic_distribution
+
+    :param x: value at which distribution will be evaluated
+    :param mu: location parameter
+    :param s: scale parameter
+    """
+    exponent = -(x - mu)/s
+    return np.exp(exponent) / (s * (1 + np.exp(exponent)**2))
