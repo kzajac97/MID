@@ -34,7 +34,7 @@ def exponential(x: float, rate: float = 1.0) -> float:
 
 
 @jit
-def cauchy(x: float, x0: float, gamma: float) -> float:
+def cauchy(x: float, x0: float = 0.0, gamma: float = 0.5) -> float:
     """
     Returns values from Cauchy distribution
     see: https://en.wikipedia.org/wiki/Cauchy_distribution
@@ -48,7 +48,7 @@ def cauchy(x: float, x0: float, gamma: float) -> float:
 
 
 @jit
-def laplace(x: float, mu: float, b: float) -> float:
+def laplace(x: float, mu: float = 0.0, b: float = 1.0) -> float:
     """
     Returns values from Laplace distribution
     see: https://en.wikipedia.org/wiki/Laplace_distribution
@@ -62,7 +62,7 @@ def laplace(x: float, mu: float, b: float) -> float:
 
 
 @jit
-def logistic(x: float, mu: float, s: float) -> float:
+def logistic(x: float, mu: float = 1.0, s: float = 1.0) -> float:
     """
     Returns values from logistic distribution
     see: https://en.wikipedia.org/wiki/Logistic_distribution
