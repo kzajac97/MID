@@ -12,10 +12,13 @@ def cumulative_triangle(x: float) -> float:
 
     :param x:  value at which distribution will be evaluated
     """
-    if x < -1 or x > 1:
+    if x < -1:
         return 0
 
-    return -x + x**2/2 if x < 0 else x - x**2/2
+    if x > 1:
+        return 1
+
+    return 0.5 + x + 0.5*x**2 if x < 0 else 0.5 + x - 0.5*x**2
 
 
 @jit
@@ -30,7 +33,7 @@ def cumulative_exponential(x: float, rate: float = 1.0) -> float:
 
 
 @jit
-def cumulative_cauchy(x: float, x0: float, gamma: float) -> float:
+def cumulative_cauchy(x: float, x0: float = 0.0, gamma: float = 0.5) -> float:
     """
     Returns values from cumulative Cauchy distribution
     see: https://en.wikipedia.org/wiki/Cauchy_distribution
@@ -39,12 +42,12 @@ def cumulative_cauchy(x: float, x0: float, gamma: float) -> float:
     :param x0: location parameter
     :param gamma: scale parameter
     """
-    ratio = ((x - x0) / gamma) ** 2
+    ratio = ((x - x0) / gamma)
     return 0.5 + (np.arctan(ratio) / np.pi)
 
 
 @jit
-def cumulative_laplace(x: float, mu: float, b: float) -> float:
+def cumulative_laplace(x: float, mu: float = 0.0, b: float = 1.0) -> float:
     """
      Returns values from cumulative Laplace distribution
     see: https://en.wikipedia.org/wiki/Laplace_distribution
@@ -54,13 +57,11 @@ def cumulative_laplace(x: float, mu: float, b: float) -> float:
     :param b: scale parameter, in range (0, inf)
     """
     exponent = -1 * np.abs(x - mu) / b
-    left_distribution = 0.5 * np.exp(exponent)
-    right_distribution = 1 - 0.5*np.exp(exponent)
-    return right_distribution if x > mu else left_distribution
+    return 0.5 * np.exp(exponent) if x < mu else 1 - 0.5*np.exp(exponent)
 
 
 @jit
-def cumulative_logistic(x: float, mu: float, s: float) -> float:
+def cumulative_logistic(x: float, mu: float = 1.0, s: float = 1.0) -> float:
     """
     Returns values from cumulative logistic distribution
     see: https://en.wikipedia.org/wiki/Logistic_distribution
