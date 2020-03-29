@@ -42,16 +42,21 @@ _DISTRIBUTION_TO_INVERTED_CUMULATIVE_DISTRIBUTION_MAPPING = {
 
 
 @jit
-def cdf(pdf: Callable[[Tuple[float, ...]], float], x: float, infinity_approximation: float = np.inf, *args) -> np.array:
+def cumulative_distribution_function(
+    random_distribution_function: Callable[[Tuple[float, ...]], float],
+    x: float,
+    infinity_approximation: float = np.inf,
+    *args
+) -> np.array:
     """
-    :param pdf: probability distribution function
+    :param random_distribution_function: random numbers distribution function
     :param x: point at which to evaluate
     :param infinity_approximation:
     :param args: additional args to pdf function
 
     :return: cumulative distribution function value at x
     """
-    return integrate.quad(pdf, -1 * infinity_approximation, x, args)[INTEGRAL_VALUE_INDEX]
+    return integrate.quad(random_distribution_function, -1 * infinity_approximation, x, args)[INTEGRAL_VALUE_INDEX]
 
 
 def _sample_analytic_distribution(
