@@ -59,7 +59,7 @@ def cumulative_distribution_function(
     return integrate.quad(random_distribution_function, -1 * infinity_approximation, x, args)[INTEGRAL_VALUE_INDEX]
 
 
-def _sample_analytic_distribution(
+def sample_analytic_distribution(
     n_samples: int,
     distribution: str,
     sample_range: Tuple[float, float] = (0.0, 1.0),
