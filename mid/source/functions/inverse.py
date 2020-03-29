@@ -69,4 +69,4 @@ def inverse_logistic(x: float, mu: float = 1.0, s: float = 1.0) -> float:
     :param mu: location parameter
     :param s: scale parameter
     """
-    return s * np.log((x - 1) / x) + mu
+    return mu + s * np.log(x / (1 - x))
