@@ -40,7 +40,6 @@ def inverse_cauchy(u: float, x0: float = 0.0, gamma: float = 0.5) -> float:
     return x0 + (gamma * np.tan(np.pi * (u - 0.5)))
 
 
-# TODO: Use formula with parameters
 @jit
 def inverse_laplace(u: float, mu: float = 0.0, b: float = 1.0) -> float:
     """
@@ -51,7 +50,7 @@ def inverse_laplace(u: float, mu: float = 0.0, b: float = 1.0) -> float:
     :param mu: location parameter
     :param b: scale parameter, in range (0, inf)
     """
-    return -1 * np.sign(u - 0.5) * np.log(1 - 2 * np.abs(u - 0.5))
+    return -1 * np.sign(u - b) * np.log(1 - 2 * np.abs(u - b)) + mu
 
 
 @jit
