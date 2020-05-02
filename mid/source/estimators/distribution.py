@@ -4,6 +4,10 @@ import numpy as np
 class ECDF:
     """
     Empirical Cumulative Distribution Function Estimator
+
+    Example:
+        >>> estimator = ECDF(realization)
+        >>> cdf = estimator(np.linspace(-3, 3, 1000))
     """
     def __init__(self, realization: np.array):
         """
