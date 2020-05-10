@@ -112,30 +112,3 @@ class Histogram:
         :return: array of histogram values
         """
         return np.vectorize(self._estimate)(values)
-
-
-class KernelEstimator:
-    """
-    Kernel Probability Density Estimator
-    """
-    def __init__(self, smoothing: float):
-        self.smoothing = smoothing
-        self._distribution = None
-        self._spacing = None
-        self.kernel = None
-
-    def fit(self, realization: np.array) -> None:
-        """
-        :param realization: random variable realization for which
-                            probability density  will be estimated,
-                            must have at least 2 samples
-        """
-        self._distribution = realization
-        self._spacing = np.arange(realization.min(), realization.max(), self.smoothing)
-
-    def _estimate(self, x):
-        if self._distribution is None:
-            raise NotFittedError
-
-        return (1 / (self.smoothing * self._distribution.shape[0])) * np.sum(self.kernel())
-
