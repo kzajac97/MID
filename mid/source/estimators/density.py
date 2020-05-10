@@ -117,19 +117,25 @@ class Histogram:
 class KernelEstimator:
     """
     Kernel Probability Density Estimator
-
-    example:
-        >>> estimator = Histogram(realization, bins=10)
-        >>> histogram = estimator(np.linspace(0, 5, 1000))
-
-    :warning: bins or width must be specified for histogram constructor
     """
+    def __init__(self, smoothing: float):
+        self.smoothing = smoothing
+        self._distribution = None
+        self._spacing = None
+        self.kernel = None
 
-    def __init__(self, realization: np.array):
-        ...
+    def fit(self, realization: np.array) -> None:
+        """
+        :param realization: random variable realization for which
+                            probability density  will be estimated,
+                            must have at least 2 samples
+        """
+        self._distribution = realization
+        self._spacing = np.arange(realization.min(), realization.max(), self.smoothing)
 
-    def _value(self, x: float) -> float:
-        ...
+    def _estimate(self, x):
+        if self._distribution is None:
+            raise NotFittedError
 
-    def __call__(self, x: float) -> float:
-        ...
+        return (1 / (self.smoothing * self._distribution.shape[0])) * np.sum(self.kernel())
+
