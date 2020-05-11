@@ -1,9 +1,17 @@
+from typing import Callable, Union
+
 import numpy as np
 from sklearn.exceptions import NotFittedError
 
 
 FIRST_ITEM_INDEX = 0
 SECOND_ITEM_INDEX = 1
+
+_DENSITY_KERNELS = {
+    "gaussian": None,
+    "epa": None,
+    "triang": None,
+}
 
 
 class ECDF:
@@ -100,6 +108,64 @@ class Histogram:
                 (self._spacing[nearest_value_index] <= self._distribution + self.width),
             ).astype(np.int)
         )
+
+    def predict(self, values: float) -> float:
+        """
+        Returns cumulative distribution function value at any point
+
+        :param values: value or array of values to compute histogram for
+
+        :raises NotFittedError: when called prior to calling fit function
+
+        :return: array of histogram values
+        """
+        return np.vectorize(self._estimate)(values)
+
+
+class KernelDensityEstimator:
+    """
+
+    """
+    def __init__(
+            self, kernel: Union[str, Callable[[float, float], float]], width: float = None, precision: int = 10_000
+    ):
+        """
+        :param kernel: str or callable kernel, if str valid options are `gaussian`, `epa`, `triang`
+        :param width: width of estimators kernel
+        :param precision: optional parameter defining precision of rounding point during predict
+        """
+        # public properties
+        self.bins = None
+        self.width = width
+        # private params
+        self._kernel = _DENSITY_KERNELS[kernel] if type(kernel) is str else kernel
+        self._precision = precision
+        # placeholders
+        self._distribution = None
+        self._spacing = None
+        self._values = None
+
+    def fit(self, realization: np.array) -> None:
+        """
+        :param realization: random variable realization for which
+                            probability density  will be estimated,
+                            must have at least 2 samples
+        """
+        self._distribution = realization
+        self._spacing = np.linspace(realization.min(), realization.max(), self._precision)
+        self.bins = self._distribution.shape[0]
+
+        self._values = np.sum(np.vectorize(self._point_kernel, signature="()->(n)")(realization), axis=0)
+
+    def _point_kernel(self, point: float):
+        return self._kernel(self._spacing - point, self.width)
+
+    def _estimate(self, x: float) -> float:
+        if self._distribution is None:
+            raise NotFittedError
+
+        nearest_value = np.argmin(np.abs(self._spacing - x))
+        return (1 / (self.width * self.bins)) * self._values[nearest_value]
 
     def predict(self, values: float) -> float:
         """
