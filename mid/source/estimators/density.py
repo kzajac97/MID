@@ -3,15 +3,11 @@ from typing import Callable, Union
 import numpy as np
 from sklearn.exceptions import NotFittedError
 
+from source.kernels.density import DENSITY_KERNELS
+
 
 FIRST_ITEM_INDEX = 0
 SECOND_ITEM_INDEX = 1
-
-_DENSITY_KERNELS = {
-    "gaussian": None,
-    "epa": None,
-    "triang": None,
-}
 
 
 class ECDF:
@@ -124,13 +120,19 @@ class Histogram:
 
 class KernelDensityEstimator:
     """
-
+    Estimator for probability density using kernel estimation
     """
     def __init__(
             self, kernel: Union[str, Callable[[float, float], float]], width: float = None, precision: int = 10_000
     ):
         """
-        :param kernel: str or callable kernel, if str valid options are `gaussian`, `epa`, `triang`
+        :param kernel: str or callable kernel, if str valid options are:
+                       `gau` or `gaussian`: gaussian_kernel
+                       `ep` or `epenechikov`: epenechikov_kernel
+                       `cos` or `cosine`: cosine kernel
+                       `top` or `tophat`: histogram like kernel
+                       `lin` or `linear`: linear monotonic kernel
+                       `exp` or `exponential`: exponential kernel
         :param width: width of estimators kernel
         :param precision: optional parameter defining precision of rounding point during predict
         """
@@ -138,7 +140,7 @@ class KernelDensityEstimator:
         self.bins = None
         self.width = width
         # private params
-        self._kernel = _DENSITY_KERNELS[kernel] if type(kernel) is str else kernel
+        self._kernel = DENSITY_KERNELS[kernel] if type(kernel) is str else kernel
         self._precision = precision
         # placeholders
         self._distribution = None
@@ -158,7 +160,7 @@ class KernelDensityEstimator:
         self._values = np.sum(np.vectorize(self._point_kernel, signature="()->(n)")(realization), axis=0)
 
     def _point_kernel(self, point: float):
-        return self._kernel(self._spacing - point, self.width)
+        return self._kernel((self._spacing - point) / self.width, self.width)
 
     def _estimate(self, x: float) -> float:
         if self._distribution is None:
