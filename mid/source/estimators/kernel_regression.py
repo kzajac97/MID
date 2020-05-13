@@ -8,7 +8,7 @@ from source.kernels.density import DENSITY_KERNELS
 
 class KernelRegressor:
     """
-
+    Kernel Regression Estimator
     """
     def __init__(
             self, kernel: Union[str, Callable[[float, float], float]], width: float = None, precision: int = 10_000
