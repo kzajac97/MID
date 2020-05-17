@@ -2,13 +2,6 @@ from typing import Callable
 
 import numpy as np
 
-from source.basis.geneators import cosine_basis
-
-BASIS_GENERATORS = {
-    "cos": cosine_basis,
-    "cosine": cosine_basis,
-}
-
 
 class OrthogonalBasis:
     """

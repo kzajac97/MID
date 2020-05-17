@@ -3,7 +3,8 @@ from typing import Union
 import numpy as np
 from sklearn.exceptions import NotFittedError
 
-from source.basis.orthogonal import BASIS_GENERATORS, OrthogonalBasis
+from source.basis.generators import BASIS_GENERATORS
+from source.basis.orthogonal import OrthogonalBasis
 
 
 class OrthogonalEstimator:
