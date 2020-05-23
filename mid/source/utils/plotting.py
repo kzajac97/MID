@@ -2,6 +2,8 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
+sns.set()
+
 
 def covariance_plot(covariance_matrix: np.array) -> None:
     """

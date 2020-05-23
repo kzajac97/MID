@@ -30,6 +30,15 @@ def estimate_covariance(x_rvs: np.array, y_rvs: np.array) -> float:
     return estimate_expectation(x_rvs * y_rvs) - (estimate_expectation(x_rvs) * estimate_expectation(y_rvs))
 
 
+def estimate_covariance_matrix(rvs: np.array) -> np.array:
+    """
+    :param rvs: 2D array with realization of multivariate random distribution
+
+    :return: covariance matrix of random matrix
+    """
+    return np.dot(rvs.T, rvs) / rvs.shape[0]
+
+
 def estimate_correlation(x_rvs: np.array, y_rvs: np.array) -> float:
     """
     :param x_rvs: array with realization of random distribution
