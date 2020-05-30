@@ -7,6 +7,42 @@ _NOISE_TYPES = {
 }
 
 
+class MISOSystem:
+    """
+    Class holding implementation of array aware MISO system
+    """
+    def __init__(self, coefficients: np.array, noise: str = "normal"):
+        """
+        :param coefficients: Vector of systems coefficients
+        :param noise: type of noise in system
+        """
+        self.coefficients = coefficients
+        self._noise = _NOISE_TYPES[noise]
+        self._n_dim = self.coefficients.shape[0]
+
+    def __call__(self, input_values: np.array, mean: float = 0.0, variance: float = 1.0) -> np.array:
+        """
+        :param input_values: array of points to evaluate system
+        :param mean: noise mean
+        :param variance: noise variance
+
+        :return: system output for given input values
+        """
+        return self.coefficients * input_values.T + self._noise(size=self._n_dim, loc=mean, scale=variance)
+
+    def apply(self, input_sequence: np.array,  mean: float = 0.0, variance: float = 1.0) -> np.array:
+        """
+        Apply system to a sequence of input values in one call
+
+        :param input_sequence: sequence of input values
+        :param mean: noise mean
+        :param variance: noise variance
+
+        :return: array of systems outputs for given inputs
+        """
+        return np.apply_along_axis(self, 1, input_sequence, mean, variance)
+
+
 class ARXSystem:
     """
     Class holding statistical ARX system
@@ -19,7 +55,7 @@ class ARXSystem:
         """
         self.alphas = alphas
         self.betas = betas
-        self.noise = _NOISE_TYPES[noise]
+        self._noise = _NOISE_TYPES[noise]
 
     def _previous_time_steps(self, array: np.array, index: int, n_steps: int) -> np.array:
         """
@@ -49,4 +85,4 @@ class ARXSystem:
                 self.betas * self._previous_time_steps(u, index=index, n_steps=len(self.betas))
             ) for index in range(len(self.alphas), len(u))])
 
-        return np.concatenate([np.zeros(len(self.alphas)), y]) + self.noise(size=len(u), scale=variance, loc=mean)
+        return np.concatenate([np.zeros(len(self.alphas)), y]) + self._noise(size=len(u), scale=variance, loc=mean)
