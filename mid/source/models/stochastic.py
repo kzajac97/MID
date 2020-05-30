@@ -18,7 +18,13 @@ class MISOSystem:
         """
         self.coefficients = coefficients
         self._noise = _NOISE_TYPES[noise]
-        self._n_dim = self.coefficients.shape[0]
+
+    @property
+    def n_inputs(self):
+        """
+        :return: number of inputs system has
+        """
+        return self.coefficients.shape[0]
 
     def __call__(self, input_values: np.array, mean: float = 0.0, variance: float = 1.0) -> np.array:
         """
@@ -28,7 +34,7 @@ class MISOSystem:
 
         :return: system output for given input values
         """
-        return self.coefficients * input_values.T + self._noise(size=self._n_dim, loc=mean, scale=variance)
+        return input_values.T @ self.coefficients + self._noise(size=1, loc=mean, scale=variance)
 
     def apply(self, input_sequence: np.array,  mean: float = 0.0, variance: float = 1.0) -> np.array:
         """
